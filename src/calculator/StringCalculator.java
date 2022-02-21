@@ -4,36 +4,48 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringCalculator {
-    public int add(String text) {
-        int result = 0;
-        if (text == null || text.isEmpty()) {
-            return result;
+    public int add(final String text) {
+        if (isBlank(text)) {
+            return 0;
         }
-//        if (text.contains("//") && text.contains("\n")) {
+
+        return sum(toInt(split(text)));
+    }
+
+    private boolean isBlank(final String text) {
+        return text == null || text.isEmpty();
+    }
+
+    private String[] split(final String text) {
+
         Matcher matcher = Pattern.compile("//(.)\n(.*)").matcher(text);
         if (matcher.find()) {
             String customDelimiter = matcher.group(1);
-            String[] strings = matcher.group(2).split(customDelimiter);
-            result = getResult(result, strings);
-            return result;
+            return matcher.group(2).split(customDelimiter);
         }
-//        }
 
-//        if (text.contains(",") || text.contains(":")) {
-        String[] strings = text.split("[,:]");
-        result = getResult(result, strings);
-        return result;
-//        }
-
-//        return -1;
+        return text.split("[,:]");
     }
 
-    private int getResult(int result, String[] strings) {
-        for (String string : strings) {
-            int num = Integer.parseInt(string);
-            if (num < 0) {
-                throw new IllegalArgumentException("숫자는 음수면 안됩니다.");
-            }
+    private int[] toInt(final String[] strings) {
+        int[] numbers = new int[strings.length];
+        for (int i = 0; i < strings.length; i++) {
+            numbers[i] = toPositive(strings[i]);
+        }
+        return numbers;
+    }
+
+    private int toPositive(final String string) {
+        int number = Integer.parseInt(string);
+        if (number < 0) {
+            throw new IllegalArgumentException("숫자는 음수면 안됩니다.");
+        }
+        return number;
+    }
+
+    private int sum(int[] numbers) {
+        int result = 0;
+        for (int num : numbers) {
             result += num;
         }
         return result;

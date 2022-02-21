@@ -31,7 +31,14 @@ public class StringCalculatorTest {
     }
 
     @Test
-    public void tempTest() {
-        String temp = "3;1;2";
+    public void patternStringTest() {
+        String expected6 = "//;\n1;2;3";
+        Assert.assertEquals(6, cal.add(expected6));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void runtimeExceptionTest() {
+        String temp = "3:-1:2";
+        cal.add(temp);
     }
 }
